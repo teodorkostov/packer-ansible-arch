@@ -7,7 +7,8 @@
       "iso_checksum": "aeed1a62fe2d812715a121ca93866995",
       "iso_checksum_type": "md5",
       "output_directory": "output",
-      "disk_size": 5000,
+      "disk_size": 33800,
+      "disk_interface": "virtio-scsi",
       "format": "raw",
       "headless": false,
       "accelerator": "kvm",
@@ -17,9 +18,8 @@
       "ssh_password": "s0m3password",
       "ssh_port": 22,
       "ssh_wait_timeout": "30s",
-      "vm_name": "tdhtest",
+      "vm_name": "arch",
       "net_device": "virtio-net",
-      "disk_interface": "virtio",
       "boot_wait": "3s",
       "boot_command": [
         "<enter><wait30s>",
@@ -33,9 +33,13 @@
   "provisioners": [{
     "type": "shell",
     "inline": [
+      "sleep 5",
+      "whoami",
       "ls -la",
       "ls -la /",
-      "echo 'I'm a provisioner"
+      "ls -la /dev",
+      "echo 'I'm a provisioner",
+      "sleep 5"
     ]
   }]
 }
