@@ -22,7 +22,7 @@
       "net_device": "virtio-net",
       "boot_wait": "3s",
       "boot_command": [
-        "<enter><wait30s>",
+        "<enter><wait16s>",
         "passwd<enter>s0m3password<enter>s0m3password<enter><wait>",
         "systemctl start sshd.service<enter><wait>"
       ],
@@ -30,16 +30,18 @@
       "shutdown_command": "shutdown -P now"
     }
   ],
-  "provisioners": [{
-    "type": "shell",
-    "inline": [
-      "sleep 5",
-      "whoami",
-      "ls -la",
-      "ls -la /",
-      "ls -la /dev",
-      "echo 'I'm a provisioner",
-      "sleep 5"
-    ]
-  }]
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "parted -m -s /dev/sda mklabel gpt",
+        "parted -m -s /dev/sda mkpart ESP fat32 1MiB 513MiB",
+        "parted -m -s /dev/sda set 1 boot on",
+        "parted -m -s /dev/sda mkpart primary linux-swap 513MiB 16GiB",
+        "parted -m -s /dev/sda mkpart primary ext4 16GiB 100%",
+        "parted -s /dev/sda print",
+        "sleep 3"
+      ]
+    }
+  ]
 }

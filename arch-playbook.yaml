@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python2.7
+  remote_user: root
+  tasks:
+  - block:
+    - name: Setup filesystem - not working!!!
+      filesystem: dev=/dev/sda1 fstype=fat opts=-F32
+    - filesystem: dev=/dev/sda3 fstype=ext4
+    - command: mkswap /dev/sda2
+  handlers:
