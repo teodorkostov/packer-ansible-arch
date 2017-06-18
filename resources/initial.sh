@@ -27,5 +27,6 @@ pacman --noconfirm -Syy
 pacman --noconfirm -S ansible
 
 # install the base system
-pacstrap /mnt base base-devel
+# pacstrap /mnt base base-devel python sudo bash-completion mesa gnome networkmanager
+pacstrap /mnt base python sudo bash-completion networkmanager
 genfstab -U -p /mnt >> /mnt/etc/fstab

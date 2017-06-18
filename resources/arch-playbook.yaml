@@ -4,31 +4,37 @@
   remote_user: root
   connection: chroot
   vars:
-    ansible_python_interpreter: /usr/bin/python2.7
+    # ansible_python_interpreter: /usr/bin/python2.7
     default_language: en_US
     default_encoding: UTF-8
     default_hostname: arch
+    time_zone: Europe
+    time_subzone: London
   tasks:
-  - command: bootctl --path=/boot install
+  # - command: ls -la /
+  # - command: bootctl install
   - command: echo "{{default_hostname}}" > /etc/hostname
-  - command: "ln -s /usr/share/zoneinfo/{{time_zone}}/{{time_subzone}} /etc/localtime"
-  - command: hwclock --systohc --utc
+  # - command: "rm /etc/localtime && ln -s /usr/share/zoneinfo/{{time_zone}}/{{time_subzone}} /etc/localtime"
+  - file:
+      src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
+      dest: /etc/localtime
+      state: link
+  # - command: hwclock --systohc --utc
+  # - command: sed "s/#{{default_language}}.{{default_encoding}} {{default_encoding}}/{{default_language}}.{{default_encoding}} {{default_encoding}}/" /etc/locale.gen
   - lineinfile:
       path: /etc/locale.gen
       regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
       line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
-  # - command: sed "s/#{{default_language}}.{{default_encoding}} {{default_encoding}}/{{default_language}}.{{default_encoding}} {{default_encoding}}/" /etc/locale.gen
-  - command: cat /etc/locale.gen | grep "{{default_language}}"
   - command: echo "LANG={{default_language}}.{{default_encoding}}" > /etc/locale.conf
-  - command: export "LANG={{default_language}}.{{default_encoding}}"
-  - pacman: update_cache=yes
-  - pacman: state=latest name=sudo
-  - pacman: state=latest name=bash-completion
-  - pacman: state=latest name=mesa
-  - pacman: state=latest name=gnome
-  - pacman: state=latest name=networkmanager
-  - systemd: enabled=yes name=gdm
-  - systemd: enabled=yes name=NetworkManager
+  # - command: export "LANG={{default_language}}.{{default_encoding}}"
+  # - pacman: update_cache=yes
+  # - pacman: state=latest name=sudo
+  # - pacman: state=latest name=bash-completion
+  # - pacman: state=latest name=mesa
+  # - pacman: state=latest name=gnome
+  # - pacman: state=latest name=networkmanager
+  # - systemd: enabled=yes name=gdm
+  # - systemd: enabled=yes name=NetworkManager
   # - systemd: enabled=yes name=fstrim.timer # SSD
   - user:
       name: terusus
@@ -40,4 +46,3 @@
       state: present
       regexp: "# %wheel ALL=(ALL) ALL"
       line: "%wheel ALL=(ALL) ALL"
-  - command: cat /etc/sudoers

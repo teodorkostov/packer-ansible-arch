@@ -1,6 +1,8 @@
 {
   "variables": {
-    "admin_username": "admin"
+    "admin_username": "admin",
+    "time_zone": "Europe",
+    "time_subzone": "Amsterdam"
   },
   "builders":
   [
@@ -27,7 +29,7 @@
       "boot_command": [
         "<enter><wait16s>",
         "passwd<enter>s0m3password<enter>s0m3password<enter><wait>",
-        "systemctl start sshd.service<enter><wait>"
+        "systemctl start sshd<enter><wait>"
       ],
       "shutdown_timeout": "30s",
       "shutdown_command": "shutdown -P now"
@@ -56,7 +58,10 @@
     {
       "type": "ansible-local",
       "playbook_file": "resources/arch-playbook.yaml",
-      "command": "ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ansible-playbook -c chroot -i '[chroots]/mnt'"
+      "inventory_file": "resources/arch-playbook.inventory",
+      "extra_arguments": [
+        "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}}'"
+      ]
     }
   ]
 }
