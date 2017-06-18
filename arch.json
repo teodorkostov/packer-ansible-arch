@@ -1,4 +1,7 @@
 {
+  "variables": {
+    "admin_username": "admin"
+  },
   "builders":
   [
     {
@@ -18,7 +21,7 @@
       "ssh_password": "s0m3password",
       "ssh_port": 22,
       "ssh_wait_timeout": "30s",
-      "vm_name": "arch",
+      "vm_name": "arch.raw",
       "net_device": "virtio-net",
       "boot_wait": "3s",
       "boot_command": [
@@ -33,15 +36,27 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": [
-        "parted -m -s /dev/sda mklabel gpt",
-        "parted -m -s /dev/sda mkpart ESP fat32 1MiB 513MiB",
-        "parted -m -s /dev/sda set 1 boot on",
-        "parted -m -s /dev/sda mkpart primary linux-swap 513MiB 16GiB",
-        "parted -m -s /dev/sda mkpart primary ext4 16GiB 100%",
-        "parted -s /dev/sda print",
-        "sleep 3"
-      ]
+      "script": "resources/initial.sh"
+    },
+    {
+      "type": "file",
+      "source": "resources/uefi-loader.conf",
+      "destination": "/mnt/boot/loader/loader.conf"
+    },
+    {
+      "type": "file",
+      "source": "resources/uefi-entry.conf",
+      "destination": "/mnt/boot/loader/entries/arch.conf"
+    },
+    {
+      "type": "file",
+      "source": "resources/pacman.conf",
+      "destination": "/mnt/etc/pacman.conf"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "resources/arch-playbook.yaml",
+      "command": "ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ansible-playbook -c chroot -i '[chroots]/mnt'"
     }
   ]
 }

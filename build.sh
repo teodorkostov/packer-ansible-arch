@@ -2,6 +2,6 @@
 
 set -e
 
-# ansible-playbook arch-playbook.yaml --check
+ansible-playbook resources/arch-playbook.yaml --check
 rm -rf output
 packer-io build arch.json
