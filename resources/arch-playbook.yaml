@@ -3,6 +3,8 @@
   gather_facts: no
   remote_user: root
   connection: chroot
+
+
   vars:
     # ansible_python_interpreter: /usr/bin/python2.7
     default_language: en_US
@@ -10,39 +12,69 @@
     default_hostname: arch
     time_zone: Europe
     time_subzone: London
+
+
   tasks:
-  # - command: ls -la /
-  # - command: bootctl install
-  - command: echo "{{default_hostname}}" > /etc/hostname
-  # - command: "rm /etc/localtime && ln -s /usr/share/zoneinfo/{{time_zone}}/{{time_subzone}} /etc/localtime"
-  - file:
-      src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
-      dest: /etc/localtime
-      state: link
-  # - command: hwclock --systohc --utc
-  # - command: sed "s/#{{default_language}}.{{default_encoding}} {{default_encoding}}/{{default_language}}.{{default_encoding}} {{default_encoding}}/" /etc/locale.gen
-  - lineinfile:
-      path: /etc/locale.gen
-      regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
-      line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
-  - command: echo "LANG={{default_language}}.{{default_encoding}}" > /etc/locale.conf
-  # - command: export "LANG={{default_language}}.{{default_encoding}}"
-  # - pacman: update_cache=yes
-  # - pacman: state=latest name=sudo
-  # - pacman: state=latest name=bash-completion
-  # - pacman: state=latest name=mesa
-  # - pacman: state=latest name=gnome
-  # - pacman: state=latest name=networkmanager
-  # - systemd: enabled=yes name=gdm
-  # - systemd: enabled=yes name=NetworkManager
-  # - systemd: enabled=yes name=fstrim.timer # SSD
-  - user:
-      name: terusus
-      shell: /bin/bash
-      group: users
-      groups: wheel,storage,power
-  - lineinfile:
-      path: /etc/sudoers
-      state: present
-      regexp: "# %wheel ALL=(ALL) ALL"
-      line: "%wheel ALL=(ALL) ALL"
+  - command: find /etc/systemd/system -iname "*NetworkManager*"
+    register: out
+  - debug: var=out.stdout_lines
+
+  - name: Prepare EFI systemd-boot
+    block:
+      # - command: bootctl install
+      - command: mkdir -p /boot/EFI/systemd
+      - command: mkdir -p /boot/EFI/Boot
+      - command: cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
+      - command: cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/Boot/BOOTX64.EFI
+
+  - name: Prepare configuration
+    block:
+      - command: echo "{{default_hostname}}" > /etc/hostname
+      # - command: "rm /etc/localtime && ln -s /usr/share/zoneinfo/{{time_zone}}/{{time_subzone}} /etc/localtime"
+      - file:
+          src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
+          dest: /etc/localtime
+          state: link
+      # - command: hwclock --systohc --utc
+      # - command: sed "s/#{{default_language}}.{{default_encoding}} {{default_encoding}}/{{default_language}}.{{default_encoding}} {{default_encoding}}/" /etc/locale.gen
+      - lineinfile:
+          path: /etc/locale.gen
+          regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
+          line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
+      - command: echo "LANG={{default_language}}.{{default_encoding}}" > /etc/locale.conf
+      # - command: export "LANG={{default_language}}.{{default_encoding}}"
+
+  - name: Prepare services
+    block:
+      # - systemd: enabled=yes name=gdm
+      # - systemd: enabled=yes name=NetworkManager
+      # - systemd: enabled=yes name=fstrim.timer # SSD
+      - file:
+          src: /usr/lib/systemd/system/gdm.service
+          dest: /etc/systemd/system/display-manager.service
+          state: link
+      # - file:
+      #     src: /etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
+      #     dest: /usr/lib/systemd/system/NetworkManager.service
+      #     state: link
+      # - file:
+      #     src: /etc/systemd/system/multi-user.target.wants/NetworkManager.service
+      #     dest: /usr/lib/systemd/system/NetworkManager.service
+      #     state: link
+      # - file:
+      #     src: /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
+      #     dest: /usr/lib/systemd/system/NetworkManager-dispatcher.service
+      #     state: link
+
+  - name: Prepare users
+    block:
+      - user:
+          name: terusus
+          shell: /bin/bash
+          group: users
+          groups: wheel,storage,power
+      - lineinfile:
+          path: /etc/sudoers
+          state: present
+          regexp: "# %wheel ALL=(ALL) ALL"
+          line: "%wheel ALL=(ALL) ALL"
