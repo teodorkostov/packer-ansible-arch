@@ -29,6 +29,6 @@ pacman --noconfirm -Syy
 pacman --noconfirm -S ansible
 
 # install the base system
-pacstrap /mnt base base-devel python sudo bash-completion mesa gnome networkmanager xf86-video-amdgpu xf86-video-fbdev
+pacstrap /mnt base base-devel python sudo bash-completion mesa gnome networkmanager
 genfstab -U -p /mnt >> /mnt/etc/fstab
 bootctl --path=/mnt/boot install || true # modifies the OVMF image
