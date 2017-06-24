@@ -3,23 +3,24 @@
 set -e
 
 # preparing the hdd
-parted -m -s /dev/sda mklabel gpt
-parted -m -s /dev/sda mkpart ESP fat32 1MiB 513MiB
-parted -m -s /dev/sda set 1 boot on
-parted -m -s /dev/sda mkpart primary linux-swap 513MiB 16GiB
-parted -m -s /dev/sda mkpart primary ext4 16GiB 100%
+parted -m -s /dev/vda mklabel gpt
+parted -m -s /dev/vda mkpart ESP fat32 1MiB 513MiB
+parted -m -s /dev/vda set 1 boot on
+parted -m -s /dev/vda mkpart primary linux-swap 513MiB 16GiB
+parted -m -s /dev/vda mkpart primary ext4 16GiB 100%
+sleep 1
 
-mkfs.fat -F32 /dev/sda1
-mkswap /dev/sda2
-swapon /dev/sda2
-mkfs.ext4 /dev/sda3
+mkfs.fat -F32 /dev/vda1
+mkswap /dev/vda2
+swapon /dev/vda2
+mkfs.ext4 /dev/vda3
 
-parted -s /dev/sda print
+parted -s /dev/vda print
 
 # mounting the folders
-mount /dev/sda3 /mnt
+mount /dev/vda3 /mnt
 mkdir /mnt/boot
-mount /dev/sda1 /mnt/boot
+mount /dev/vda1 /mnt/boot
 mkdir -p /mnt/boot/loader/entries
 
 # prepare ansible
@@ -27,5 +28,6 @@ pacman --noconfirm -Syy
 pacman --noconfirm -S ansible
 
 # install the base system
-pacstrap /mnt base base-devel python sudo bash-completion mesa gnome networkmanager
+pacstrap /mnt base base-devel python sudo bash-completion mesa gnome networkmanager xf86-video-amdgpu xf86-video-fbdev
 genfstab -U -p /mnt >> /mnt/etc/fstab
+bootctl --path=/mnt/boot install || true

@@ -15,18 +15,6 @@
 
 
   tasks:
-  - command: find /etc/systemd/system -iname "*NetworkManager*"
-    register: out
-  - debug: var=out.stdout_lines
-
-  - name: Prepare EFI systemd-boot
-    block:
-      # - command: bootctl install
-      - command: mkdir -p /boot/EFI/systemd
-      - command: mkdir -p /boot/EFI/Boot
-      - command: cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/systemd-bootx64.efi
-      - command: cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/Boot/BOOTX64.EFI
-
   - name: Prepare configuration
     block:
       - command: echo "{{default_hostname}}" > /etc/hostname
@@ -35,7 +23,6 @@
           src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
           dest: /etc/localtime
           state: link
-      # - command: hwclock --systohc --utc
       # - command: sed "s/#{{default_language}}.{{default_encoding}} {{default_encoding}}/{{default_language}}.{{default_encoding}} {{default_encoding}}/" /etc/locale.gen
       - lineinfile:
           path: /etc/locale.gen

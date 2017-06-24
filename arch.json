@@ -8,12 +8,32 @@
   [
     {
       "type": "qemu",
+      "qemuargs": [
+        ["-serial", "none"],
+        ["-parallel", "none"],
+        ["-nodefaults"],
+        ["-nodefconfig"],
+        ["-no-user-config"],
+        ["-enable-kvm"],
+        ["-name", "Packer"],
+        ["-cpu", "host,kvm=off"],
+        ["-smp", "sockets=1,cores=2,threads=1"],
+        ["-m", "2048M"],
+        ["-mem-prealloc"],
+        ["-machine", "pc,accel=kvm,kernel_irqchip=on,mem-merge=off"],
+        ["-net", "nic,model=virtio"],
+        ["-net", "bridge,br=bridge0"],
+        ["-drive", "if=pflash,format=raw,file=images/ovmf_x64.bin"],
+        ["-drive", "if=virtio,id=drive0,file=output/arch.raw,format=raw,cache=none,aio=native"],
+        ["-vga", "qxl"],
+        ["-display", "sdl"]
+      ],
       "iso_url": "images/archlinux-x86_64.iso",
       "iso_checksum": "aeed1a62fe2d812715a121ca93866995",
       "iso_checksum_type": "md5",
       "output_directory": "output",
       "disk_size": 33800,
-      "disk_interface": "virtio-scsi",
+      "disk_interface": "virtio",
       "format": "raw",
       "headless": false,
       "accelerator": "kvm",
@@ -25,9 +45,10 @@
       "ssh_wait_timeout": "30s",
       "vm_name": "arch.raw",
       "net_device": "virtio-net",
-      "boot_wait": "3s",
+      "boot_wait": "10s",
       "boot_command": [
-        "<enter><wait16s>",
+        "<down><down><enter><wait><down><down><down><down><down><down><down><down>",
+        "<enter><wait20s>",
         "passwd<enter>s0m3password<enter>s0m3password<enter><wait>",
         "systemctl start sshd<enter><wait>"
       ],
@@ -39,6 +60,14 @@
     {
       "type": "shell",
       "script": "resources/initial.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "resources/arch-playbook.yaml",
+      "inventory_file": "resources/arch-playbook.inventory",
+      "extra_arguments": [
+        "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}}'"
+      ]
     },
     {
       "type": "file",
@@ -54,14 +83,6 @@
       "type": "file",
       "source": "resources/pacman.conf",
       "destination": "/mnt/etc/pacman.conf"
-    },
-    {
-      "type": "ansible-local",
-      "playbook_file": "resources/arch-playbook.yaml",
-      "inventory_file": "resources/arch-playbook.inventory",
-      "extra_arguments": [
-        "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}}'"
-      ]
     }
   ]
 }
