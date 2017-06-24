@@ -29,13 +29,15 @@
           path: /etc/locale.gen
           regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
           line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
-      - command: echo "LANG={{default_language}}.{{default_encoding}}" > /etc/locale.conf
+      - command: locale-gen
+      # - command: echo "LANG={{default_language}}.{{default_encoding}}" > /etc/locale.conf
+      - copy: content="LANG={{default_language}}.{{default_encoding}}" dest=/etc/locale.conf
       # - command: export "LANG={{default_language}}.{{default_encoding}}"
 
   - name: Prepare services
     block:
-      # - systemd: enabled=yes name=gdm
-      # - systemd: enabled=yes name=NetworkManager
+      # - systemd: enabled=yes name=gdm.service
+      # - systemd: enabled=yes name=NetworkManager.service
       # - systemd: enabled=yes name=fstrim.timer # SSD
       - file:
           src: /usr/lib/systemd/system/gdm.service
