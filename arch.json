@@ -1,6 +1,5 @@
 {
   "variables": {
-    "admin_username": "admin",
     "time_zone": "Europe",
     "time_subzone": "Amsterdam"
   },
@@ -64,6 +63,7 @@
       "type": "ansible-local",
       "playbook_file": "resources/arch-playbook.yaml",
       "inventory_file": "resources/arch-playbook.inventory",
+      "playbook_paths": ["resources/private"],
       "extra_arguments": [
         "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}}'"
       ]

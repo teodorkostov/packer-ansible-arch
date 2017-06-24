@@ -2,8 +2,6 @@
 
 set -e
 
-ansible-playbook resources/arch-playbook.yaml --check
-
 rm -rf output
 rm -rf temp
 mkdir output
