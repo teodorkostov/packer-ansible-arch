@@ -22,7 +22,7 @@
         ["-machine", "pc,accel=kvm,kernel_irqchip=on,mem-merge=off"],
         ["-net", "nic,model=virtio"],
         ["-net", "bridge,br=bridge0"],
-        ["-drive", "if=pflash,format=raw,file=output/ovmf_x64.bin"],
+        ["-drive", "if=pflash,format=raw,file=output/arch.bin"],
         ["-drive", "if=virtio,id=drive0,file=temp/arch.raw,format=raw,cache=none,aio=native"],
         ["-vga", "qxl"],
         ["-display", "sdl"]
