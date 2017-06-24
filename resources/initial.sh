@@ -8,6 +8,7 @@ parted -m -s /dev/vda mkpart ESP fat32 1MiB 513MiB
 parted -m -s /dev/vda set 1 boot on
 parted -m -s /dev/vda mkpart primary linux-swap 513MiB 16GiB
 parted -m -s /dev/vda mkpart primary ext4 16GiB 100%
+parted -m -s /dev/vda name 3 'os'
 sleep 1
 
 mkfs.fat -F32 /dev/vda1
