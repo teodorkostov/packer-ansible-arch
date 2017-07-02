@@ -19,42 +19,25 @@
   - name: Prepare configuration
     block:
       - command: echo "{{default_hostname}}" > /etc/hostname
-      # - command: "rm /etc/localtime && ln -s /usr/share/zoneinfo/{{time_zone}}/{{time_subzone}} /etc/localtime"
       - file:
           src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
           dest: /etc/localtime
           state: link
-      # - command: sed "s/#{{default_language}}.{{default_encoding}} {{default_encoding}}/{{default_language}}.{{default_encoding}} {{default_encoding}}/" /etc/locale.gen
       - lineinfile:
           path: /etc/locale.gen
           regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
           line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
       - command: locale-gen
-      # - command: echo "LANG={{default_language}}.{{default_encoding}}" > /etc/locale.conf
       - copy: content="LANG={{default_language}}.{{default_encoding}}" dest=/etc/locale.conf
-      # - command: export "LANG={{default_language}}.{{default_encoding}}"
 
   - name: Prepare services
     block:
       # - systemd: enabled=yes name=gdm.service
       # - systemd: enabled=yes name=NetworkManager.service
-      # - systemd: enabled=yes name=fstrim.timer # SSD
       - file:
           src: /usr/lib/systemd/system/gdm.service
           dest: /etc/systemd/system/display-manager.service
           state: link
-      # - file:
-      #     src: /etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
-      #     dest: /usr/lib/systemd/system/NetworkManager.service
-      #     state: link
-      # - file:
-      #     src: /etc/systemd/system/multi-user.target.wants/NetworkManager.service
-      #     dest: /usr/lib/systemd/system/NetworkManager.service
-      #     state: link
-      # - file:
-      #     src: /etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
-      #     dest: /usr/lib/systemd/system/NetworkManager-dispatcher.service
-      #     state: link
 
   - name: Prepare users
     block:
