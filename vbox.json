@@ -1,0 +1,72 @@
+{
+  "variables": {
+    "time_zone": "Europe",
+    "time_subzone": "Amsterdam"
+  },
+  "builders":
+  [
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "ArchLinux",
+      "iso_url": "images/archlinux-x86_64.iso",
+      "iso_checksum": "8164667750c46cf297720b21145e1e27",
+      "iso_checksum_type": "md5",
+      "output_directory": "temp",
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+      "ssh_username": "root",
+      "ssh_password": "s0m3password",
+      "ssh_port": 22,
+      "vm_name": "arch.ovf",
+      "boot_wait": "3s",
+      "boot_command": [
+        "<enter><wait16s>",
+        "passwd<enter>s0m3password<enter>s0m3password<enter><wait>",
+        "systemctl start sshd<enter><wait>"
+      ],
+      "shutdown_timeout": "30s",
+      "shutdown_command": "shutdown -P now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "resources/initial.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "resources/arch-playbook.yaml",
+      "inventory_file": "resources/arch-playbook.inventory",
+      "playbook_paths": ["resources/private"],
+      "extra_arguments": [
+        "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}}'"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "resources/uefi-loader.conf",
+      "destination": "/mnt/boot/loader/loader.conf"
+    },
+    {
+      "type": "file",
+      "source": "resources/uefi-entry.conf",
+      "destination": "/mnt/boot/loader/entries/arch.conf"
+    },
+    {
+      "type": "file",
+      "source": "resources/pacman.conf",
+      "destination": "/mnt/etc/pacman.conf"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "shell-local",
+        "inline": [
+          "mv temp/arch.raw output/arch.raw",
+          "rm -rf temp"
+        ]
+      }
+    ]
+  ]
+}
