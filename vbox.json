@@ -3,24 +3,28 @@
     "time_zone": "Europe",
     "time_subzone": "Amsterdam"
   },
-  "builders":
-  [
+  "builders": [
     {
       "type": "virtualbox-iso",
-      "guest_os_type": "ArchLinux",
+      "guest_os_type": "ArchLinux_64",
       "iso_url": "images/archlinux-x86_64.iso",
       "iso_checksum": "8164667750c46cf297720b21145e1e27",
       "iso_checksum_type": "md5",
-      "output_directory": "temp",
+      "cpus": 2,
+      "disk_size": 120000,
       "ssh_host_port_min": 2222,
       "ssh_host_port_max": 2229,
+      "ssh_port": 22,
       "ssh_username": "root",
       "ssh_password": "s0m3password",
-      "ssh_port": 22,
-      "vm_name": "arch.ovf",
+      "vm_name": "ArchLinux",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--nic1", "nat"],
+        ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
+      ],
       "boot_wait": "3s",
       "boot_command": [
-        "<enter><wait16s>",
+        "<enter><wait25s>",
         "passwd<enter>s0m3password<enter>s0m3password<enter><wait>",
         "systemctl start sshd<enter><wait>"
       ],
@@ -57,16 +61,5 @@
       "source": "resources/pacman.conf",
       "destination": "/mnt/etc/pacman.conf"
     }
-  ],
-  "post-processors": [
-    [
-      {
-        "type": "shell-local",
-        "inline": [
-          "mv temp/arch.raw output/arch.raw",
-          "rm -rf temp"
-        ]
-      }
-    ]
   ]
 }
