@@ -36,7 +36,7 @@
         "passwd<enter>s0m3password<enter>s0m3password<enter><wait>",
         "systemctl start sshd<enter><wait>"
       ],
-      "shutdown_timeout": "30s",
+      "shutdown_timeout": "120s",
       "shutdown_command": "shutdown -P now"
     }
   ],
