@@ -51,7 +51,12 @@
       "environment_vars": [
         "PROXY_USERNAME={{user `proxy_username`}}",
         "PROXY_PASSWORD={{user `proxy_password`}}",
-        "PROXY_HOSTNAME={{user `proxy_hostname`}}"
+        "PROXY_HOSTNAME={{user `proxy_hostname`}}",
+        "NO_PROXY=localhost,127.0.0.0/8,::1",
+        "FTP_PROXY=http://localhost:3128/",
+        "HTTPS_PROXY=http://localhost:3128/",
+        "HTTP_PROXY=http://localhost:3128/",
+        "ALL_PROXY=socks://localhost:3128/"
       ]
     },
     {
