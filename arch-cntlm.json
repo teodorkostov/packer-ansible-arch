@@ -52,7 +52,7 @@
         "PROXY_USERNAME={{user `proxy_username`}}",
         "PROXY_PASSWORD={{user `proxy_password`}}",
         "PROXY_HOSTNAME={{user `proxy_hostname`}}",
-        "NO_PROXY=localhost,127.0.0.0/8,::1",
+        "NO_PROXY=localhost,127.0.0.0/8,::1,10.*,192.168.*,*.intranet,*.local",
         "FTP_PROXY=http://localhost:3128/",
         "HTTPS_PROXY=http://localhost:3128/",
         "HTTP_PROXY=http://localhost:3128/",
