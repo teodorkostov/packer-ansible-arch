@@ -47,7 +47,12 @@
     },
     {
       "type": "shell",
-      "scripts": ["resources/scripts/format.sh", "resources/scripts/cntlm.sh", "resources/scripts/base.sh"]
+      "scripts": ["resources/scripts/format.sh", "resources/scripts/cntlm.sh", "resources/scripts/base.sh"],
+      "environment_vars": [
+        "PROXY_USERNAME={{user `proxy_username`}}",
+        "PROXY_PASSWORD={{user `proxy_password`}}",
+        "PROXY_HOSTNAME={{user `proxy_hostname`}}"
+      ]
     },
     {
       "type": "ansible-local",
