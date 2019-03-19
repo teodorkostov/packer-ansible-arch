@@ -8,7 +8,8 @@
     "proxy_password": "",
     "proxy_workstation": "",
     "proxy_host": "",
-    "proxy_domain": ""
+    "proxy_domain": "",
+    "no_proxy": "localhost,127.0.0.0/8,::1,10.*,192.168.*,*.intranet,*.local"
   },
   "builders": [
     {
@@ -54,11 +55,16 @@
         "PROXY_HOST={{user `proxy_host`}}",
         "PROXY_WORKSTATION={{user `proxy_workstation`}}",
         "PROXY_DOMAIN={{user `proxy_domain`}}",
-        "NO_PROXY=localhost,127.0.0.0/8,::1,10.*,192.168.*,*.intranet,*.local",
+        "NO_PROXY={{user `no_proxy`}}",
         "FTP_PROXY=http://localhost:3128/",
         "HTTPS_PROXY=http://localhost:3128/",
         "HTTP_PROXY=http://localhost:3128/",
-        "ALL_PROXY=socks://localhost:3128/"
+        "ALL_PROXY=socks://localhost:3128/",
+        "no_proxy={{user `no_proxy`}}",
+        "ftp_proxy=http://localhost:3128/",
+        "https_proxy=http://localhost:3128/",
+        "http_proxy=http://localhost:3128/",
+        "all_proxy=socks://localhost:3128/"
       ]
     },
     {
