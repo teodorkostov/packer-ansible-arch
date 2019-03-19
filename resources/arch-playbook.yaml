@@ -4,16 +4,12 @@
   remote_user: root
   connection: chroot
 
-
-  vars_files:
-    - playbooks/private/credentials.yaml
   vars:
     default_language: en_US
     default_encoding: UTF-8
     default_hostname: arch
     time_zone: Europe
     time_subzone: London
-
 
   tasks:
   - name: Prepare configuration
@@ -42,8 +38,8 @@
   - name: Prepare users
     block:
       - user:
-          name: "{{username}}"
-          password: "{{password}}"
+          name: "{{ username }}"
+          password: "{{ password | password_hash('sha512') }}"
           shell: /bin/bash
           group: users
           groups: wheel,storage,power

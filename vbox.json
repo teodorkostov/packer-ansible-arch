@@ -1,7 +1,9 @@
 {
   "variables": {
     "time_zone": "Europe",
-    "time_subzone": "Amsterdam"
+    "time_subzone": "Amsterdam",
+    "username": "user",
+    "password": "pass"
   },
   "builders": [
     {
@@ -41,9 +43,8 @@
       "type": "ansible-local",
       "playbook_file": "resources/arch-playbook.yaml",
       "inventory_file": "resources/arch-playbook.inventory",
-      "playbook_paths": ["resources/private"],
       "extra_arguments": [
-        "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}}'"
+        "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}} username={{user `username`}} password={{user `password`}}'"
       ]
     },
     {

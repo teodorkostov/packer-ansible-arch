@@ -4,23 +4,13 @@ QEMU VM image with [Packer] and [Ansible].
 
 1) Make sure you have packer installed (`$ packer-io`).
 2) Prepare the `./images` folder.
-3) Prepare credentials for a system user (`./resources/private/credentials.yaml`).
-4) Run `build.sh`.
+3) Run `build.sh`.
 
 ### Images
 
 Needed files for the installation:
 - Arch Linux ISO - can be downloaded from [here](https://www.archlinux.org/download/)
 - OVMF binary - can be build from [here](https://aur.archlinux.org/packages/ovmf-git/)
-
-### Credentials
-
-Prepare a the credentials for the system user with the following syntax:
-```yaml
----
-username: terusus
-password: {{ 'passwordsaresecret'|password_hash('sha512') }} # or hash it yourself ($6$<salt>$<hash>)
-```
 
 ### Known issues
 
