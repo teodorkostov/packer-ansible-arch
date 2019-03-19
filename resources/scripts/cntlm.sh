@@ -6,7 +6,7 @@ set -e
 pacman --noconfirm -U /tmp/cntlm-x86_64.pkg.tar.xz
 
 # configure
-PROXY_HASHES=$(echo $PROXY_PASSWORD | cntlm -H -d ad -u $PROXY_USERNAME | tail -3)
+PROXY_HASHES=$(echo $PROXY_PASSWORD | cntlm -H -d $PROXY_DOMAIN -u $PROXY_USERNAME | tail -1)
 
 (cat <<END
 Username        $PROXY_USERNAME
