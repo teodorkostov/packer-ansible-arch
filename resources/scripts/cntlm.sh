@@ -27,4 +27,4 @@ END
 systemctl start cntlm.service
 
 # update pacman
-sed -i 's/#XferCommand = \/usr\/bin\/wget/XferCommand = \/usr\/bin\/wget --quiet --show-progress --passive-ftp -c -O %o %u/g' /etc/pacman.conf
+sed -i 's/#XferCommand = \/usr\/bin\/wget --passive-ftp -c -O %o %u/XferCommand = \/usr\/bin\/wget --quiet --show-progress --passive-ftp -c -O %o %u/g' /etc/pacman.conf
