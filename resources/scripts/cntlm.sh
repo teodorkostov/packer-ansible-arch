@@ -14,7 +14,7 @@ Domain          $PROXY_DOMAIN
 Workstation     $PROXY_WORKSTATION
 
 Proxy           $PROXY_HOST
-NoProxy         localhost, 127.0.0.1, 10.*, 192.168.*, *.intranet, *.local
+NoProxy         $NO_PROXY
 Listen          127.0.0.1:3128
 
 Auth            NTLMv2
