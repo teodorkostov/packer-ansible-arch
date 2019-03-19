@@ -85,7 +85,7 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "resources/scripts/initial.sh"
+      "scripts": ["resources/scripts/format.sh", "resources/scripts/base.sh"]
     },
     {
       "type": "ansible-local",
