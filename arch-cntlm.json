@@ -1,0 +1,76 @@
+{
+  "variables": {
+    "time_zone": "Europe",
+    "time_subzone": "Amsterdam",
+    "username": "user",
+    "password": "pass",
+    "proxy_username": "",
+    "proxy_password": "",
+    "proxy_workstation": "",
+    "proxy_host": "",
+    "proxy_domain": ""
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "ArchLinux_64",
+      "iso_url": "images/archlinux-x86_64.iso",
+      "iso_checksum": "8164667750c46cf297720b21145e1e27",
+      "iso_checksum_type": "md5",
+      "cpus": 2,
+      "disk_size": 120000,
+      "ssh_host_port_min": 2222,
+      "ssh_host_port_max": 2229,
+      "ssh_port": 22,
+      "ssh_username": "root",
+      "ssh_password": "s0m3password",
+      "vm_name": "ArchLinux",
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--nic1", "nat"],
+        ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
+      ],
+      "boot_wait": "3s",
+      "boot_command": [
+        "<enter><wait25s>",
+        "passwd<enter>s0m3password<enter>s0m3password<enter><wait>",
+        "systemctl start sshd<enter><wait>"
+      ],
+      "shutdown_timeout": "30s",
+      "shutdown_command": "shutdown -P now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "images/cntlm-0.92.3-4-x86_64.pkg.tar.xz",
+      "destination": "/tmp/cntlm-x86_64.pkg.tar.xz"
+    },
+    {
+      "type": "shell",
+      "scripts": ["resources/scripts/format.sh", "resources/scripts/base.sh"]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "resources/ansible/arch-playbook.yaml",
+      "inventory_file": "resources/ansible/arch-playbook.inventory",
+      "extra_arguments": [
+        "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}} username={{user `username`}} password={{user `password`}}'"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "resources/config/boot/uefi-loader.conf",
+      "destination": "/mnt/boot/loader/loader.conf"
+    },
+    {
+      "type": "file",
+      "source": "resources/config/boot/uefi-entry.conf",
+      "destination": "/mnt/boot/loader/entries/arch.conf"
+    },
+    {
+      "type": "file",
+      "source": "resources/config/pacman/pacman.conf",
+      "destination": "/mnt/etc/pacman.conf"
+    }
+  ]
+}
