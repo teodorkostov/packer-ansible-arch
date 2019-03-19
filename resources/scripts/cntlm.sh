@@ -28,3 +28,6 @@ systemctl start cntlm.service
 
 # update pacman
 sed -i 's/#XferCommand = \/usr\/bin\/wget --passive-ftp -c -O %o %u/XferCommand = \/usr\/bin\/wget --quiet --show-progress --passive-ftp -c -O %o %u/g' /etc/pacman.conf
+
+# adding common DNS server
+echo "nameserver 208.67.222.222" >> /etc/resolv.conf
