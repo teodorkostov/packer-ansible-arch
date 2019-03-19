@@ -37,29 +37,29 @@
   "provisioners": [
     {
       "type": "shell",
-      "script": "resources/initial.sh"
+      "script": "resources/scripts/initial.sh"
     },
     {
       "type": "ansible-local",
-      "playbook_file": "resources/arch-playbook.yaml",
-      "inventory_file": "resources/arch-playbook.inventory",
+      "playbook_file": "resources/ansible/arch-playbook.yaml",
+      "inventory_file": "resources/ansible/arch-playbook.inventory",
       "extra_arguments": [
         "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}} username={{user `username`}} password={{user `password`}}'"
       ]
     },
     {
       "type": "file",
-      "source": "resources/uefi-loader.conf",
+      "source": "resources/config/boot/uefi-loader.conf",
       "destination": "/mnt/boot/loader/loader.conf"
     },
     {
       "type": "file",
-      "source": "resources/uefi-entry.conf",
+      "source": "resources/config/boot/uefi-entry.conf",
       "destination": "/mnt/boot/loader/entries/arch.conf"
     },
     {
       "type": "file",
-      "source": "resources/pacman.conf",
+      "source": "resources/config/pacman/pacman.conf",
       "destination": "/mnt/etc/pacman.conf"
     }
   ]
