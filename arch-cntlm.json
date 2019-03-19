@@ -47,7 +47,7 @@
     },
     {
       "type": "shell",
-      "scripts": ["resources/scripts/format.sh", "resources/scripts/base.sh"]
+      "scripts": ["resources/scripts/format.sh", "resources/scripts/cntlm.sh", "resources/scripts/base.sh"]
     },
     {
       "type": "ansible-local",
