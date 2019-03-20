@@ -51,9 +51,3 @@
       state: present
       regexp: "# %wheel ALL=\\(ALL\\) ALL"
       line: "%wheel ALL=(ALL) ALL"
-  - name: Enable sudo to keep proxy environment variables
-    lineinfile:
-      path: /etc/sudoers
-      state: present
-      insertafter: "# Defaults!REBOOT !log_output"
-      line: "Defaults env_keep += \"all_proxy http_proxy https_proxy ftp_proxy no_proxy\""

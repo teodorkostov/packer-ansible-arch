@@ -21,3 +21,9 @@
         - { key: "/system/proxy/https/port", value: "3128" }
         - { key: "/system/proxy/socks/host", value: "localhost" }
         - { key: "/system/proxy/socks/port", value: "3128" }
+  - name: Enable sudo to keep proxy environment variables
+    lineinfile:
+      path: /etc/sudoers
+      state: present
+      insertafter: "# Defaults!REBOOT !log_output"
+      line: "Defaults env_keep += \"all_proxy http_proxy https_proxy ftp_proxy no_proxy\""
