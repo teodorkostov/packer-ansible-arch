@@ -28,6 +28,10 @@
     command: locale-gen
   - name: Save the locale
     copy: content="LANG={{default_language}}.{{default_encoding}}" dest=/etc/locale.conf
+  - name: Configure the swappiness
+    copy:
+      content: "vm.swappiness=10"
+      dest: /etc/sysctl.d/99-swapiness.conf
 
   - name: Enable GDM
     systemd: enabled=yes name=gdm.service
