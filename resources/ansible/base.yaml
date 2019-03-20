@@ -34,9 +34,20 @@
       dest: /etc/sysctl.d/99-swapiness.conf
 
   - name: Enable GDM
-    systemd: enabled=yes name=gdm.service
+    file:
+      state: link
+      src: /usr/lib/systemd/system/gdm.service
+      dest: /etc/systemd/system/display-manager.service
   - name: Enable Network Manager
-    systemd: enabled=yes name=NetworkManager.service
+    file:
+      state: link
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { dest: "/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service", src: "/usr/lib/systemd/system/NetworkManager.service" }
+      - { dest: "/etc/systemd/system/multi-user.target.wants/NetworkManager.service", src: "/usr/lib/systemd/system/NetworkManager.service" }
+      - { dest: "/etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service", src: "/usr/lib/systemd/system/NetworkManager-dispatcher.service" }
+      - { dest: "/etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service", src: "/usr/lib/systemd/system/NetworkManager-wait-online.service" }
 
   - name: Create the main user
     user:
