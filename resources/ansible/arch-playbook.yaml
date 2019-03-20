@@ -12,39 +12,38 @@
     time_subzone: London
 
   tasks:
-  - name: Prepare configuration
-    block:
-      - command: echo "{{default_hostname}}" > /etc/hostname
-      - file:
-          src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
-          dest: /etc/localtime
-          state: link
-      - lineinfile:
-          path: /etc/locale.gen
-          regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
-          line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
-      - command: locale-gen
-      - copy: content="LANG={{default_language}}.{{default_encoding}}" dest=/etc/locale.conf
+  - name: Configure the hostname
+    command: echo "{{default_hostname}}" > /etc/hostname
+  - name: Configure the timezone
+    file:
+      src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
+      dest: /etc/localtime
+      state: link
+  - name: Configure the locale
+    lineinfile:
+      path: /etc/locale.gen
+      regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
+      line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
+  - name: Generate the locale settings
+    command: locale-gen
+  - name: Save the locale
+    copy: content="LANG={{default_language}}.{{default_encoding}}" dest=/etc/locale.conf
 
-  - name: Prepare services
-    block:
-      # - systemd: enabled=yes name=gdm.service
-      # - systemd: enabled=yes name=NetworkManager.service
-      - file:
-          src: /usr/lib/systemd/system/gdm.service
-          dest: /etc/systemd/system/display-manager.service
-          state: link
+  - name: Enable GDM
+    systemd: enabled=yes name=gdm.service
+  - name: Enable Network Manager
+    systemd: enabled=yes name=NetworkManager.service
 
-  - name: Prepare users
-    block:
-      - user:
-          name: "{{ username }}"
-          password: "{{ password | password_hash('sha512') }}"
-          shell: /bin/bash
-          group: users
-          groups: wheel,storage,power
-      - lineinfile:
-          path: /etc/sudoers
-          state: present
-          regexp: "# %wheel ALL=(ALL) ALL"
-          line: "%wheel ALL=(ALL) ALL"
+  - name: Create the main user
+    user:
+      name: "{{ username }}"
+      password: "{{ password | password_hash('sha512') }}"
+      shell: /bin/bash
+      group: users
+      groups: wheel,storage,power
+  - name: Enable sudo for wheel
+    lineinfile:
+      path: /etc/sudoers
+      state: present
+      regexp: "# %wheel ALL=(ALL) ALL"
+      line: "%wheel ALL=(ALL) ALL"
