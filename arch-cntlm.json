@@ -30,6 +30,13 @@
         ["modifyvm", "{{.Name}}", "--nic1", "nat"],
         ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
       ],
+      "vboxmanage_post": [
+        ["modifyvm", "{{.Name}}", "--memory", "12288"],
+        ["modifyvm", "{{.Name}}", "--vram", "256"],
+        ["modifyvm", "{{.Name}}", "--cpus", "3"],
+        ["modifyvm", "{{.Name}}", "--firmware", "efi64"],
+        ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional"]
+      ],
       "boot_wait": "3s",
       "boot_command": [
         "<enter><wait25s>",
