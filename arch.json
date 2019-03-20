@@ -89,8 +89,8 @@
     },
     {
       "type": "ansible-local",
-      "playbook_file": "resources/ansible/arch-playbook.yaml",
-      "inventory_file": "resources/ansible/arch-playbook.inventory",
+      "playbook_file": "resources/ansible/base.yaml",
+      "inventory_file": "resources/ansible/inventory.ini",
       "extra_arguments": [
         "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}} username={{user `username`}} password={{user `password`}}'"
       ]

@@ -48,7 +48,7 @@
     },
     {
       "type": "shell",
-      "scripts": ["resources/scripts/format.sh", "resources/scripts/cntlm.sh", "resources/scripts/base.sh"],
+      "scripts": ["resources/scripts/format.sh", "resources/scripts/cntlm.sh", "resources/scripts/base.sh", "resources/scripts/cntlm-post.sh"],
       "environment_vars": [
         "PROXY_USERNAME={{user `proxy_username`}}",
         "PROXY_PASSWORD={{user `proxy_password`}}",
@@ -69,8 +69,8 @@
     },
     {
       "type": "ansible-local",
-      "playbook_file": "resources/ansible/arch-playbook.yaml",
-      "inventory_file": "resources/ansible/arch-playbook.inventory",
+      "playbook_files": ["resources/ansible/base.yaml", "resources/ansible/cntlm.yaml"],
+      "inventory_file": "resources/ansible/inventory.ini",
       "extra_arguments": [
         "--extra-vars 'time_zone={{user `time_zone`}} time_subzone={{user `time_subzone`}} username={{user `username`}} password={{user `password`}}'"
       ]
