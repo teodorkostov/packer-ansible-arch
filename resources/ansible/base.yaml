@@ -12,52 +12,52 @@
     time_subzone: London
 
   tasks:
-  - name: Configure the hostname
-    command: echo "{{default_hostname}}" > /etc/hostname
-  - name: Configure the timezone
-    file:
-      src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
-      dest: /etc/localtime
-      state: link
-  - name: Configure the locale
-    lineinfile:
-      path: /etc/locale.gen
-      regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
-      line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
-  - name: Generate the locale settings
-    command: locale-gen
-  - name: Save the locale
-    copy: content="LANG={{default_language}}.{{default_encoding}}" dest=/etc/locale.conf
-  - name: Configure the swappiness
-    copy:
-      content: "vm.swappiness=10"
-      dest: /etc/sysctl.d/99-swapiness.conf
+    - name: Configure the hostname
+      command: echo "{{default_hostname}}" > /etc/hostname
+    - name: Configure the timezone
+      file:
+        src: "/usr/share/zoneinfo/{{time_zone}}/{{time_subzone}}"
+        dest: /etc/localtime
+        state: link
+    - name: Configure the locale
+      lineinfile:
+        path: /etc/locale.gen
+        regexp: "#{{default_language}}.{{default_encoding}} {{default_encoding}}"
+        line: "{{default_language}}.{{default_encoding}} {{default_encoding}}"
+    - name: Generate the locale settings
+      command: locale-gen
+    - name: Save the locale
+      copy: content="LANG={{default_language}}.{{default_encoding}}" dest=/etc/locale.conf
+    - name: Configure the swappiness
+      copy:
+        content: "vm.swappiness=10"
+        dest: /etc/sysctl.d/99-swapiness.conf
 
-  - name: Enable GDM
-    file:
-      state: link
-      src: /usr/lib/systemd/system/gdm.service
-      dest: /etc/systemd/system/display-manager.service
-  - name: Enable Network Manager
-    file:
-      state: link
-      src: "{{ item.src }}"
-      dest: "{{ item.dest }}"
-    with_items:
-      - { dest: "/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service", src: "/usr/lib/systemd/system/NetworkManager.service" }
-      - { dest: "/etc/systemd/system/multi-user.target.wants/NetworkManager.service", src: "/usr/lib/systemd/system/NetworkManager.service" }
-      - { dest: "/etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service", src: "/usr/lib/systemd/system/NetworkManager-dispatcher.service" }
+    - name: Enable GDM
+      file:
+        state: link
+        src: /usr/lib/systemd/system/gdm.service
+        dest: /etc/systemd/system/display-manager.service
+    - name: Enable Network Manager
+      file:
+        state: link
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - { dest: "/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service", src: "/usr/lib/systemd/system/NetworkManager.service" }
+        - { dest: "/etc/systemd/system/multi-user.target.wants/NetworkManager.service", src: "/usr/lib/systemd/system/NetworkManager.service" }
+        - { dest: "/etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service", src: "/usr/lib/systemd/system/NetworkManager-dispatcher.service" }
 
-  - name: Create the main user
-    user:
-      name: "{{ username }}"
-      password: "{{ password | password_hash('sha512') }}"
-      shell: /bin/bash
-      group: users
-      groups: wheel,storage,power
-  - name: Enable sudo for wheel
-    lineinfile:
-      path: /etc/sudoers
-      state: present
-      regexp: "# %wheel ALL=\\(ALL\\) ALL"
-      line: "%wheel ALL=(ALL) ALL"
+    - name: Create the main user
+      user:
+        name: "{{ username }}"
+        password: "{{ password | password_hash('sha512') }}"
+        shell: /bin/bash
+        group: users
+        groups: wheel,storage,power
+    - name: Enable sudo for wheel
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: "# %wheel ALL=\\(ALL\\) ALL"
+        line: "%wheel ALL=(ALL) ALL"
