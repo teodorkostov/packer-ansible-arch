@@ -1,5 +1,6 @@
 {
   "variables": {
+    "pacman_mirror": "",
     "time_zone": "Europe",
     "time_subzone": "Amsterdam",
     "username": "user",
@@ -57,6 +58,7 @@
       "type": "shell",
       "scripts": ["resources/scripts/format.sh", "resources/scripts/cntlm.sh", "resources/scripts/base.sh", "resources/scripts/cntlm-post.sh"],
       "environment_vars": [
+        "PACMAN_MIRROR={{user `pacman_mirror`}}",
         "PROXY_USERNAME={{user `proxy_username`}}",
         "PROXY_PASSWORD={{user `proxy_password`}}",
         "PROXY_HOST={{user `proxy_host`}}",

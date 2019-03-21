@@ -2,6 +2,9 @@
 
 set -e
 
+# add a preferred mirror
+sed -i '1s@^@'"$PACMAN_MIRROR"'\n@' /etc/pacman.d/mirrorlist
+
 # prepare ansible
 pacman --noconfirm -Syy
 pacman --noconfirm -S ansible
