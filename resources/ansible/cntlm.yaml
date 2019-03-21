@@ -12,14 +12,14 @@
         value: "{{ item.value }}"
       with_items:
         - { key: "/system/proxy/ignore-hosts", value: "['localhost', '127.0.0.0/8', '::1']" }
-        - { key: "/system/proxy/mode", value: "manual" }
-        - { key: "/system/proxy/ftp/host", value: "localhost" }
+        - { key: "/system/proxy/mode", value: "'manual'" }
+        - { key: "/system/proxy/ftp/host", value: "'localhost'" }
         - { key: "/system/proxy/ftp/port", value: "3128" }
-        - { key: "/system/proxy/http/host", value: "localhost" }
+        - { key: "/system/proxy/http/host", value: "'localhost'" }
         - { key: "/system/proxy/http/port", value: "3128" }
-        - { key: "/system/proxy/https/host", value: "localhost" }
+        - { key: "/system/proxy/https/host", value: "'localhost'" }
         - { key: "/system/proxy/https/port", value: "3128" }
-        - { key: "/system/proxy/socks/host", value: "localhost" }
+        - { key: "/system/proxy/socks/host", value: "'localhost'" }
         - { key: "/system/proxy/socks/port", value: "3128" }
   - name: Enable sudo to keep proxy environment variables
     lineinfile:
