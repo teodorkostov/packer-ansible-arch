@@ -19,4 +19,4 @@ Auth            NTLMv2
 Password        PROXY_PASSWORD
 PROXY_HASHES
 END
-) > /mnt/etc/cntlm.conf
+) > /mnt/etc/cntlm.conf.template
