@@ -20,3 +20,6 @@ Password        PROXY_PASSWORD
 PROXY_HASHES
 END
 ) > /mnt/etc/cntlm.conf.template
+
+# update pacman
+sed -i 's/#XferCommand = \/usr\/bin\/wget --passive-ftp -c -O %o %u/XferCommand = \/usr\/bin\/wget --quiet --show-progress --passive-ftp -c -O %o %u/g' /mnt/etc/pacman.conf
