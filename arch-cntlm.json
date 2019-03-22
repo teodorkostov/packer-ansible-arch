@@ -32,11 +32,14 @@
         ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
       ],
       "vboxmanage_post": [
+        ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional"],
+        ["modifyvm", "{{.Name}}", "--firmware", "efi64"],
         ["modifyvm", "{{.Name}}", "--memory", "12288"],
         ["modifyvm", "{{.Name}}", "--vram", "256"],
         ["modifyvm", "{{.Name}}", "--cpus", "3"],
-        ["modifyvm", "{{.Name}}", "--firmware", "efi64"],
-        ["modifyvm", "{{.Name}}", "--clipboard", "bidirectional"]
+        ["modifyvm", "{{.Name}}", "--accelerate3d", "on"],
+        ["modifyvm", "{{.Name}}", "--vrde", "off"],
+        ["setextradata", "{{.Name}}", "GUI/ShowMiniToolBar", "no"]
       ],
       "boot_wait": "3s",
       "boot_command": [
