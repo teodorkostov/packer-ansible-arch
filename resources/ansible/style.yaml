@@ -13,7 +13,7 @@
         state: read
         key: "/org/gnome/terminal/legacy/profiles:/list"
       register: current_profiles
-    - set_fact: new_profiles="{{ current_profiles.value }} + ['{{ terminal_profile_uuid }}']"
+    - set_fact: new_profiles="['{{ terminal_profile_uuid }}'] {% if current_profiles.value %} + {{ current_profiles.value }} {% endif %}"
     - name: Setup styles
       dconf:
         state: present
