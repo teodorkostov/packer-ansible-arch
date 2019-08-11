@@ -70,7 +70,8 @@
       "vm_name": "ArchLinux",
       "vboxmanage": [
         ["modifyvm", "{{.Name}}", "--nic1", "nat"],
-        ["modifyvm", "{{.Name}}", "--cableconnected1", "on"]
+        ["modifyvm", "{{.Name}}", "--cableconnected1", "on"],
+        ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"]
       ],
       "boot_wait": "3s",
       "boot_command": [
